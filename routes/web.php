@@ -35,10 +35,16 @@ Route::get('/blog/{slug}', 'BlogController@view');
 Route::get('/amp/blog/{slug}', 'BlogController@viewAmp');
 
 Route::get('/store/getTopStore', 'StoreController@getLatestStore');
-Route::get('/manage/getTopStores', 'ManageController@getTopStores');
-Route::get('/manage/getBestStores', 'ManageController@getBestStores');
-Route::post('/manage/searchStores', "ManageController@searchStores");
-Route::post('/manage/searchCodes', "ManageController@searchCodes");
+Route::prefix('manage')->group(function() {
+    Route::get('/getTopStores', 'ManageController@getTopStores');
+    Route::get('/getBestStores', 'ManageController@getBestStores');
+    Route::post('/searchStores', "ManageController@searchStores");
+    Route::post('/searchCodes', "ManageController@searchCodes");
+    Route::post('/addStore', "ManageController@addStore");
+    Route::post('/reorder', "ManageController@reorder");
+    Route::post('/removeStore', 'ManageController@removeStore');
+});
+
 
 
 Route::get('/page/index', "PageController@index");
