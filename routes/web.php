@@ -44,6 +44,9 @@ Route::prefix('manage')->group(function() {
     Route::post('/reorder', "ManageController@reorder");
     Route::post('/removeStore', 'ManageController@removeStore');
 });
+Route::prefix('subscribe')->group(function() {
+    Route::get('/getSubscribers', "SubscribeController@getSubscribers");
+});
 
 
 // Route::prefix('store')->group(function() {
