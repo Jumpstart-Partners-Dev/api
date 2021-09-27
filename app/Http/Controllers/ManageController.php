@@ -64,10 +64,32 @@ class ManageController extends Controller
             }
             $s .= $str;
         }
-        $query1 = "select id, name from stores where alias = '".$s."' limit 100";
+        $query1 = "select id, name, coupon_count, deal_count, logo, alias from stores where alias = '".$s."' limit 100";
         $result = DB::select($query1);
         if (empty($result)) {
-            $query2 = "select id, name, coupon_count, deal_count from stores ".$where." limit 50";
+            $query2 = "select id, name, coupon_count, deal_count, logo, alias from stores ".$where." limit 50";
+            $result = DB::select($query2);
+        }
+        echo json_encode(['data' => $result, 'status' => 0]);
+    }
+
+    public function searchBlogs(Request $req) {
+        $sl = strtolower($req->search);
+        $strs = explode(' ', $sl);
+        $where = '';
+        $s = '';
+        foreach ($strs as $key => $str) {
+            if($key == 0) {
+                $where .= "where slug like '%".$str."%'";
+            } else {
+                $where .= " and slug like '%".$str."%'";
+            }
+            $s .= $str;
+        }
+        $query1 = "select id, title as name, thumbnail as logo, slug as alias from blogs where slug = '".$s."' limit 100";
+        $result = DB::select($query1);
+        if (empty($result)) {
+            $query2 = "select id, title as name, thumbnail as logo, slug as alias from blogs ".$where." limit 50";
             $result = DB::select($query2);
         }
         echo json_encode(['data' => $result, 'status' => 0]);
@@ -118,5 +140,35 @@ class ManageController extends Controller
         DB::table($target)
             ->where('store_id', $store)
             ->delete();
+    }
+
+    public function getSeoDetails(Request $req) {
+        $query1 = "select * from seo
+            where ref_id = '" . $req->id. "' 
+            and type = '" . $req->type . "'";
+        $result = DB::select($query1);
+        if (empty($result)) $result = [];
+        echo json_encode(['data' => $result, 'status' => 0]);
+    }
+
+    public function saveSeoDetails(Request $req) {
+        $cnt = DB::table('seo')->where('ref_id', $req->id)->count();
+        if($cnt == 0) {
+            DB::table('seo')->insert([
+                'ref_id' => $req->id,
+                'type' => $req->type,
+                'title' => $req->title,
+                'description' => $req->description
+            ]);
+        } else {
+            DB::table('seo')
+                ->where('ref_id', $req->id)
+                ->where('type', $req->type)
+                ->update([
+                    'title' => $req->title,
+                    'description' => $req->description
+                ]);
+        }
+        echo json_encode(['status' => 0]);
     }
 }

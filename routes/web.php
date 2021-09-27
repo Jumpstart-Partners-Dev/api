@@ -39,10 +39,13 @@ Route::prefix('manage')->group(function() {
     Route::get('/getTopStores', 'ManageController@getTopStores');
     Route::get('/getBestStores', 'ManageController@getBestStores');
     Route::post('/searchStores', "ManageController@searchStores");
+    Route::post('/searchBlogs', "ManageController@searchBlogs");
     Route::post('/searchCodes', "ManageController@searchCodes");
     Route::post('/addStore', "ManageController@addStore");
     Route::post('/reorder', "ManageController@reorder");
     Route::post('/removeStore', 'ManageController@removeStore');
+    Route::post('/getSeoDetails', 'ManageController@getSeoDetails');
+    Route::post('/saveSeoDetails', 'ManageController@saveSeoDetails');
 });
 Route::prefix('subscribe')->group(function() {
     Route::get('/getSubscribers', "SubscribeController@getSubscribers");
