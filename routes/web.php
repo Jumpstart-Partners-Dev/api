@@ -40,6 +40,19 @@ Route::get('/manage/getBestStores', 'ManageController@getBestStores');
 Route::post('/manage/searchStores', "ManageController@searchStores");
 Route::post('/manage/searchCodes', "ManageController@searchCodes");
 
+
+Route::get('/page/index', "PageController@index");
+Route::get('/page/get/{id}', "PageController@get");
+Route::post('/page/create', "PageController@create");
+Route::post('/page/update/{id}', "PageController@update");
+Route::post('/page/delete/{id}', "PageController@delete");
+
+Route::get('/page/content/index', "PageController@index_content");
+Route::get('/page/content/get/{id}', "PageController@get_content");
+Route::post('/page/content/create', "PageController@create_content");
+Route::post('/page/content/update/{id}', "PageController@update_content");
+Route::post('/page/content/delete/{id}', "PageController@delete_content");
+
 // Route::prefix('store')->group(function() {
 //     Route::get('getTopStore', 'StoreController@index');
 // });
