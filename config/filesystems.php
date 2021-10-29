@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'local'),
+    'default' => env('FILESYSTEM_DRIVER', 'public'),
 
     /*
     |--------------------------------------------------------------------------
@@ -37,9 +37,14 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root'   => public_path() . '/uploads/page/banners',
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
+        ],
+
+        'public2' => [
+            'driver' => 'local',
+            'root'   => public_path('uploads')
         ],
 
         's3' => [
