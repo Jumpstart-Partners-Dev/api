@@ -14,9 +14,9 @@ class PageController extends Controller
         $page = DB::table('pages')->get();
 
         if(!is_null($page)) {
-            echo json_encode(['data' => $page, 'status' => 200]);
+            return json_encode(['data' => $page, 'status' => 200]);
         } else {
-            echo json_encode(['data' => $page, 'status' => 0]);
+            return json_encode(['data' => $page, 'status' => 0]);
         }
     }
 
@@ -25,9 +25,9 @@ class PageController extends Controller
         $page = DB::table('pages')->where('id', $id)->first();
 
         if(!is_null($page)) {
-            echo json_encode(['data' => $page, 'status' => 200]);
+            return json_encode(['data' => $page, 'status' => 200]);
         } else {
-            echo json_encode(['data' => $page, 'status' => 0]);
+            return json_encode(['data' => $page, 'status' => 0]);
         }
     }
     
@@ -54,9 +54,9 @@ class PageController extends Controller
         }
         
         if(!is_null($page)) {
-            echo json_encode(['data' => $page, 'status' => 200]);
+            return json_encode(['data' => $page, 'status' => 200]);
         } else {
-            echo json_encode(['data' => $page, 'status' => 0]);
+            return json_encode(['data' => $page, 'status' => 0]);
         }
     }
 
@@ -82,9 +82,9 @@ class PageController extends Controller
         }
         
         if(!is_null($page)) {
-            echo json_encode(['data' => $page, 'status' => 200]);
+            return json_encode(['data' => $page, 'status' => 200]);
         } else {
-            echo json_encode(['data' => $page, 'status' => 0]);
+            return json_encode(['data' => $page, 'status' => 0]);
         }
     }
 
@@ -92,7 +92,7 @@ class PageController extends Controller
     {
         $page = DB::table('pages')->where('id', $id)->delete();
 
-        echo json_encode(['data' => $page, 'status' => 0]);    
+        return json_encode(['data' => $page, 'status' => 0]);    
     }
 
     //page-contents
@@ -102,9 +102,9 @@ class PageController extends Controller
         $data = DB::table('page_contents')->get();
 
         if(!is_null($data)) {
-            echo json_encode(['data' => $data, 'status' => 200]);
+            return json_encode(['data' => $data, 'status' => 200]);
         } else {
-            echo json_encode(['data' => $data, 'status' => 0]);
+            return json_encode(['data' => $data, 'status' => 0]);
         }
     }
 
