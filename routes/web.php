@@ -52,18 +52,25 @@ Route::prefix('subscribe')->group(function() {
 });
 
 
+Route::prefix('homepage')->group(function() {
+    Route::get('/getContents', 'HomepageContentController@get_contents');
+});
 
-Route::get('/page/index', "PageController@index");
-Route::get('/page/get/{id}', "PageController@get");
-Route::post('/page/create', "PageController@create");
-Route::post('/page/update/{id}', "PageController@update");
-Route::post('/page/delete/{id}', "PageController@delete");
 
-Route::get('/page/content/index', "PageController@index_content");
-Route::get('/page/content/{id}/{type}', "PageController@get_content");
-Route::post('/page/content/create', "PageController@create_content");
-Route::post('/page/content/update/{id}', "PageController@update_content");
-Route::post('/page/content/delete/{id}', "PageController@delete_content");
+Route::prefix('page')->group(function() {
+    Route::get('/index', "PageController@index");
+    Route::get('/get/{id}', "PageController@get");
+    Route::post('/create', "PageController@create");
+    Route::post('/update/{id}', "PageController@update");
+    Route::post('/delete/{id}', "PageController@delete");
+    Route::get('/content/index', "PageController@index_content");
+    Route::get('/content/{id}/{type}', "PageController@get_content");
+    Route::post('/content/create', "PageController@create_content");
+    Route::post('/content/update/{id}', "PageController@update_content");
+    Route::post('/content/delete/{id}', "PageController@delete_content");
+});
+
+
 
 // Route::prefix('store')->group(function() {
 //     Route::get('getTopStore', 'StoreController@index');
