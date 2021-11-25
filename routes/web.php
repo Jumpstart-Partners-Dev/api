@@ -72,8 +72,6 @@ Route::prefix('page')->group(function() {
 
 
 
-
-
 // Route::prefix('store')->group(function() {
 //     Route::get('getTopStore', 'StoreController@index');
 // });
