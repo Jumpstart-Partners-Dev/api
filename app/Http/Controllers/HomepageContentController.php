@@ -42,7 +42,7 @@ class HomepageContentController extends Controller
         if (!empty($result1) && !empty($result2)) {
             return json_encode(['topStore' => $result1, 'bestStore' => $result2]);
         } else {
-            return json_encode(['data' => "Error"])
+            return json_encode(['data' => "Error"]);
         }
         
     }
