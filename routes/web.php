@@ -23,6 +23,7 @@ Route::get('/', function () {
 });
 
 
+Route::get('/translate', 'TranslationsController@translate');
 
 Route::get('/store/getStores', 'StoreController@getStores');
 Route::post('/store/search', 'StoreController@searchStores');
