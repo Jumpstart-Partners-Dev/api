@@ -27,7 +27,14 @@ class TranslationsController extends Controller
     
             $trans = new GoogleTranslate();
             $result = $trans->translate($sourceLang, $targetLang, $sourceWord);
-            echo $result;
+            if ($result) {
+                $data2 = DB::table('translation_master')->insert([
+                    'ref_id' => $data->id,
+                    'lang' => $targetLang,
+                    'translation' => $result
+                ]);
+                return json_encode($data2);
+            }
         }
        
     }
