@@ -24,6 +24,11 @@ Route::get('/', function () {
 
 
 
+Route::prefix('files')->group(function() {
+    Route::get('/parsecsv', 'FilesController@parseCSV');
+    Route::get('/uploadview', 'FilesController@uploadview');
+});
+
 Route::get('/store/getStores', 'StoreController@getStores');
 Route::post('/store/search', 'StoreController@searchStores');
 Route::get('/session/filterCoupon', 'StoreController@filterCoupon');
