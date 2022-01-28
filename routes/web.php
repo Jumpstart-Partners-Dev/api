@@ -23,7 +23,7 @@ Route::get('/', function () {
 });
 
 
-
+Route::get('/store/{alias}', 'StoreController@index');
 Route::get('/store/getStores', 'StoreController@getStores');
 Route::post('/store/search', 'StoreController@searchStores');
 Route::get('/session/filterCoupon', 'StoreController@filterCoupon');
@@ -69,6 +69,11 @@ Route::prefix('page')->group(function() {
     Route::post('/content/update/{id}', "PageController@update_content");
     Route::post('/content/delete/{id}', "PageController@delete_content");
 });
+
+Route::get('curltest', "TestController@curltest");
+Route::get('checkfields', 'TestController@checkfields');
+
+// Route::get('/search', "SearchController");
 
 
 
