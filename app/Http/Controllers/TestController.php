@@ -34,6 +34,7 @@ class TestController extends Controller
             // echo "</pre>";
 
             $response = Http::withHeaders([
+                
                 'authority' => 'store.racquetworld.com',
                 'cache-control' => 'max-age=0',
                 'sec-ch-ua' => '" Not;A Brand";v="99", "Google Chrome";v="97", "Chromium";v="97"',
@@ -51,7 +52,6 @@ class TestController extends Controller
                 'referer' => 'https://store.racquetworld.com/affiliate-login.html',
                 'accept-language' => 'en-US,en;q=0.9',
                 'cookie' => 'mm5-RW-basket-id=0469e082c27e81f9706aef4b80dba5f8; _ga=GA1.2.1109616410.1642571556; _gid=GA1.2.1738255064.1642571556; _gat=1; _clck=wrk5y1|1|ey9|0; mm5-RW-affiliate-session=57a0a5704529a8c53e24ed8d799599e5; _uetsid=008bc9a078ec11ec9e5823d01d5330b9; _uetvid=008beb9078ec11ec888e179e5516f766; _clsk=shggf4|1642571573724|2|1|f.clarity.ms/collect; _gali=js-AFED',
-            
                 ])
                 ->get($url, [
                     'Action' => 'ALGI',
@@ -124,8 +124,146 @@ class TestController extends Controller
         // $response = Requests::post('https://store.racquetworld.com/affiliate-edit.html', $headers, $data);
     }
 
+    public function automate(Request $req) {
+        
+        $url = $req->secure_url;
+        $search = $req->search_str;
+        $div = $req->dom_target;
+        $q = explode("|", $req->search_str);
+        $search = $q[0];
+        
+
+        $a = json_decode($req->cors_header, true);
+        $f = json_decode($req->extra_form_params, true);
+
+        $response = Http::withHeaders($a)
+            ->get($url, $f);
+        
+        $crawler = new Crawler($response->body());
+
+        $nodeValues = $crawler->filter($div)->each(function (Crawler $node, $i) {
+            return $node->text();
+        });
+
+        $comm = '';
+
+        if(count($q) == 1) {
+            foreach($nodeValues as $a) {
+                if(strpos($a, $search) !== false) {
+                    $commission = str_replace($search, "", $a);
+    
+                    $comm =  $commission;
+                } else {
+                    echo '';
+                }
+            }
+        } else {
+            $commission = str_replace($search, "", $nodeValues[$q[1]]);
+            $comm =  $commission;
+        }
+
+        $res['url'] = $url;
+        if($comm == '') {
+            $res['status'] = 'failed';
+        } else {
+            $res['target'] = $search . ' on ' . $div;
+            $res['commission'] = $comm;
+        }
+
+        $res['nodes'] = (Object) $nodeValues;
+
+        echo json_encode($res);
+
+        // echo $response->body();
+    }
+
+    public function page(Request $req) {
+        
+        $url = $req->secure_url;
+        $search = $req->search_str;
+        $div = $req->dom_target;
+
+        $a = json_decode($req->cors_header, true);
+        $f = json_decode($req->extra_form_params, true);
+
+        $response = Http::withHeaders($a)
+            ->get($url, $f);
+        
+        $crawler = new Crawler($response->body());
+
+        $nodeValues = $crawler->filter($div)->each(function (Crawler $node, $i) {
+            return $node->text();
+        });
+
+        $comm = '';
+
+        print_r($nodeValues);
+
+        foreach($nodeValues as $a) {
+            if(strpos($a, $search) !== false) {
+                $commission = str_replace($search, "", $a);
+
+                $comm =  $commission;
+            } else {
+                echo '';
+            }
+        }
+
+        $res['url'] = $url;
+        if($comm == '') {
+            $res['status'] = 'failed';
+        } else {
+            $res['target'] = $search . ' on ' . $div;
+            $res['commission'] = $comm;
+        }
+
+        echo json_encode($res);
+
+        echo $response->body();
+    }
+
+    public function mock() {
+        
+        $s = DB::table('store_commissions')
+            ->where('id', '5873')->first();
+
+        
+
+        // $head = json_decode($this->fixJSON($s->cors_header));
+
+        $url = $s->secure_url;
+
+        $a = str_replace('"', '|', $s->cors_header);
+        $a = str_replace("'", '"', $a);
+        $a = str_replace('|', "'", $a);
+        // echo $a;
+        // $head = json_decode('{"a": "b", "c": "d"}');
+        
+        echo '<pre>';
+        print_r($head);
+        echo '</pre>';
+    }
+
+    public function fixJSON($json) {
+        $newJSON = '';
+
+        $jsonLength = strlen($json);
+        for ($i = 0; $i < $jsonLength; $i++) {
+            if ($json[$i] == '"' || $json[$i] == "'") {
+                $nextQuote = strpos($json, $json[$i], $i + 1);
+                $quoteContent = substr($json, $i + 1, $nextQuote - $i - 1);
+                $newJSON .= '"' . str_replace('"', "'", $quoteContent) . '"';
+                $i = $nextQuote;
+            } else {
+                $newJSON .= $json[$i];
+            }
+        }
+
+        return $newJSON;
+    }
+
     public function checkfields() {
-        $data = DB::table('store_commissions')->where('id', '5867')->first();
+        $data = DB::table('store_commissions')->where('id', '5874')->first();   
 
         echo '<pre>';
         // print_r($data);
@@ -133,7 +271,8 @@ class TestController extends Controller
 
         $url = 'https://www.decorativetrimmings.com/affiliate-edit.html';
 
-        $response = Http::get($url);
+        $response = Http::get($data->affiliate_url);
+        // $response = Http::get($url);
 
         // echo $response->body();
 
@@ -142,32 +281,46 @@ class TestController extends Controller
         // $nodeValues = $crawler->filter('form')->each(function (Crawler $node, $i) {
         //     return $node->form();
         // });
-
         $node = $crawler->selectButton('Log in');
+        if($node->text('empty') == 'empty') {
+            $node = $crawler->selectButton('Login');
+            if($node->text('empty') == 'empty') {
+                $node = $crawler->selectButton('LogIn');
+                if($node->text('empty') == 'empty') {
+                    $node = $crawler->selectButton('LOGIN');
+                    if($node->text('empty') == 'empty') {
+                        $node = $crawler->selectButton('Log In');
+                    }
+                }
+            }
+        }
+        if ($node->text('empty') != 'empty') {
+            $form = $node->form();
 
-        echo $node->text('empty');
+            echo '<pre>';
+            // print_r($form);
+            echo '</pre>';  
 
-        $form = $node->form();
+            $uri = $form->getUri();
+            $method = $form->getMethod();
+            $name = $form->getName();
+            $values = $form->getValues();
 
-        echo '<pre>';
-        // print_r($form);
-        echo '</pre>';  
+            echo $uri . '<br>';
+            echo $method . '<br>';
+            echo $name . '<br>';
 
-        $uri = $form->getUri();
-        $method = $form->getMethod();
-        $name = $form->getName();
-        $values = $form->getValues();
+            // $attributes = $crawler
+            //     ->filterXpath('//form/input')
+            //     ->extract(['action']);
 
-        echo $uri . '<br>';
-        echo $method . '<br>';
-        echo $name . '<br>';
+            echo '<pre>';
+            print_r($values);
+            echo '</pre>';
+        } else {
+            echo 'Not found';
+        }
 
-        // $attributes = $crawler
-        //     ->filterXpath('//form/input')
-        //     ->extract(['action']);
-
-        echo '<pre>';
-        print_r($values);
-        echo '</pre>';
+        
     }
 }

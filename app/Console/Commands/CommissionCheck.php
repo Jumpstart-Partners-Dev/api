@@ -43,6 +43,55 @@ class CommissionCheck extends Command
 
         $bar->start();
 
+        $err = '';
+
+        foreach($this->stores as $idx => $store) {
+            if (filter_var($store->affiliate_url, FILTER_VALIDATE_URL)) {
+                try {
+                    $response = Http::get($store->affiliate_url);
+
+                    $crawler = new Crawler($response->body());
+
+                    $node = $crawler->selectButton('Log in');
+                    if($node->text('empty') == 'empty') {
+                        $node = $crawler->selectButton('Login');
+                        if($node->text('empty') == 'empty') {
+                            $node = $crawler->selectButton('LogIn');
+                            if($node->text('empty') == 'empty') {
+                                $node = $crawler->selectButton('LOGIN');
+                                if($node->text('empty') == 'empty') {
+                                    $node = $crawler->selectButton('Log In');
+                                }
+                            }
+                        }
+                    }
+
+                    
+                    if ($node->text('empty') != 'empty') {
+                        $form = $node->form();
+
+                        $uri = $form->getUri();
+                        $method = $form->getMethod();
+                        $name = $form->getName();
+                        $values = $form->getValues();
+
+                        DB::table('store_commissions')->where('id', $store->id)
+                            ->update(['secure_url' => $uri, 'login_form' => json_encode($values), 'form_found' => 1]);
+
+                    }
+                } catch (\Throwable $th) {
+                    DB::table('store_commissions')->where('id', $store->id)
+                        ->update(['form_found' => 0]);
+                    $err.= $store->id . ',';
+                    // 19839
+                }
+            }
+
+            
+
+            $bar->advance();
+        }
+
         $bar->finish();
 
     }
@@ -58,8 +107,8 @@ class CommissionCheck extends Command
         $this->line('Auto checking commission..');
         $this->line('Fetching list..');
 
-        $this->stores = DB::table('store_commissions')->get();
-        
+        $this->stores = DB::table('store_commissions')->where('form_found', 0)->orWhere('form_found', NULL)->orderBy('id', 'asc')->get();
+
         $this->line('Total of ' . count($this->stores) . ' records');
         
         $this->searchLogin();

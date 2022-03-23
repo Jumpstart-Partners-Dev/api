@@ -56,6 +56,11 @@ Route::prefix('homepage')->group(function() {
     Route::get('/getContents', 'HomepageContentController@get_contents');
 });
 
+Route::prefix('commissions')->group(function() {
+    Route::post('/all', 'CommissionController@getAll');
+    Route::post('/updateSettings', 'CommissionController@updateSettings');
+});
+
 
 Route::prefix('page')->group(function() {
     Route::get('/index', "PageController@index");
@@ -70,8 +75,33 @@ Route::prefix('page')->group(function() {
     Route::post('/content/delete/{id}', "PageController@delete_content");
 });
 
+Route::prefix('users')->group(function() {
+    Route::post('/register', 'UserController@register');
+    Route::get('/test', function () {
+        echo 'ok';
+    });
+    Route::get('getAll', 'UserController@getAll');
+    Route::post('setAble', 'UserController@setAble');
+});
+
+Route::prefix('auth')->group(function(){
+    Route::post('/login', 'AuthController@login');
+    Route::post('/changepass', 'AuthController@changepass');
+});
+
+Route::prefix('admin')->group(function() {
+    Route::get('/getStores', "StoreController@admin_getStores");
+    Route::get('/getStore/{id}', "StoreController@admin_getStore");
+});
+
 Route::get('curltest', "TestController@curltest");
+Route::get('mock', "TestController@mock");
 Route::get('checkfields', 'TestController@checkfields');
+Route::post('/test/automate', 'TestController@automate');
+Route::post('/test/page', 'TestController@page');
+Route::get('phpinfo', function() {
+    phpinfo();
+});
 
 // Route::get('/search', "SearchController");
 
