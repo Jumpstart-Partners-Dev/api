@@ -46,6 +46,7 @@ Route::prefix('manage')->group(function() {
     Route::post('/removeStore', 'ManageController@removeStore');
     Route::post('/getSeoDetails', 'ManageController@getSeoDetails');
     Route::post('/saveSeoDetails', 'ManageController@saveSeoDetails');
+    Route::get('/getAffTypes', 'ManageController@getAffTypes');
 });
 Route::prefix('subscribe')->group(function() {
     Route::get('/getSubscribers', "SubscribeController@getSubscribers");

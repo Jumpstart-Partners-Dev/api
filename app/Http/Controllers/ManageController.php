@@ -171,4 +171,14 @@ class ManageController extends Controller
         }
         echo json_encode(['status' => 0]);
     }
+
+    public function getAffTypes () {
+        $data = DB::table('aff_types')->get();
+
+        if(!is_null($data)) {
+            return json_encode(['data' => $data, 'status' => 200]);
+        } else {
+            return json_encode(['data' => $data, 'status' => 0]);
+        }
+    }
 }

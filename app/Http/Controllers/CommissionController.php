@@ -60,6 +60,7 @@ class CommissionController extends Controller
             'settings_ok' => $e->settings_ok,
             'affiliate_id' => $e->affiliate_id,
             'affiliate_url' => $e->affiliate_url,
+            'aff_type_Id' => $e->aff_type_Id,
             'username' => $e->username,
             'password' => $e->password,
             'login_ok' => $e->login_ok,
