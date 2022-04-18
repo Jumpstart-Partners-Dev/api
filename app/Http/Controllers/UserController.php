@@ -37,13 +37,13 @@ class UserController extends Controller
         $this->user->U($req->id, ['password' => Hash::make($req->password)]);
     }
 
+    public function deleteUser($id) {
+       return $this->user->D($id);
+    }
     public function getAll() {
         echo json_encode(['users' => $this->user->R('users<-profiles')->get(), 'error' => $this->user->error]);
     }
 
-    public function delete() {
-
-    }
 
     public function getProfile (Request $req) {
         try {

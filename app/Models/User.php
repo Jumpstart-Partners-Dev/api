@@ -46,7 +46,7 @@ class User extends Model
         try {
             switch ($type) {
                 case "users<-profiles":
-                    $this->data = DB::select("select 
+                    $this->data = DB::select("select
                         a.*, b.*, a.id as user_id, b.id as profile_id 
                         from ".$this->table->users." as a
                         left join ".$this->table->profiles." as b on a.id = b.user_id
@@ -74,13 +74,12 @@ class User extends Model
         try {
             DB::table($this->table->users)->where('id', $id)
                 ->update($data);
-        
             $this->error = false;
         } catch (Throwable $th) {
             $this->error = true;
             $this->message = $th;
         }
-
+        
         return $this;
     }
 
@@ -93,6 +92,8 @@ class User extends Model
             $this->error = true;
             $this->message = $th;
         }
+        
+        return $this;
     }
 
     public function get () {

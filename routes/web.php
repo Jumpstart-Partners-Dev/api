@@ -81,6 +81,8 @@ Route::prefix('users')->group(function() {
         echo 'ok';
     });
     Route::get('getAll', 'UserController@getAll');
+    Route::post('resetPassword', 'UserController@resetPassword');
+    Route::post('delete/{id}', 'UserController@deleteUser');
     Route::post('setAble', 'UserController@setAble');
 });
 
@@ -92,6 +94,10 @@ Route::prefix('auth')->group(function(){
 Route::prefix('admin')->group(function() {
     Route::get('/getStores', "StoreController@admin_getStores");
     Route::get('/getStore/{id}', "StoreController@admin_getStore");
+});
+
+Route::prefix('permission')->group(function() {
+    Route::get('getAll', "PermissionController@getAll");
 });
 
 Route::get('curltest', "TestController@curltest");
