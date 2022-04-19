@@ -23,6 +23,10 @@ Route::get('/', function () {
 });
 
 
+Route::prefix('translation')->group(function() {
+    Route::post('/translate', 'TranslationsController@translate');
+    Route::post('/addrefstring', 'TranslationsController@ref_string');
+});
 
 Route::get('/store/getStores', 'StoreController@getStores');
 Route::post('/store/search', 'StoreController@searchStores');
